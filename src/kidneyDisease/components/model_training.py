@@ -1,6 +1,7 @@
 from pathlib import Path
 import tensorflow as tf
 from kidneyDisease.entity.config_entity import TrainingConfig
+import json
 
 
 class Training:
@@ -66,7 +67,6 @@ class Training:
             shuffle=True,
             **dataflow_kwargs
         )
-
     
     @staticmethod
     def save_model(path: Path, model: tf.keras.Model):
@@ -77,13 +77,17 @@ class Training:
         self.steps_per_epoch = self.train_generator.samples // self.train_generator.batch_size
         self.validation_steps = self.valid_generator.samples // self.valid_generator.batch_size
 
-        self.model.fit(
+        self.history = self.model.fit(
             self.train_generator,
             epochs=self.config.params_epochs,
             steps_per_epoch=self.steps_per_epoch,
             validation_steps=self.validation_steps,
             validation_data=self.valid_generator
         )
+
+        with open(self.config.history_path, "w") as f:
+            json.dump(self.history.history, f)
+
 
         self.save_model(
             path=self.config.trained_model_path,

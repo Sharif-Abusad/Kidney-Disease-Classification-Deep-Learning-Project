@@ -1,5 +1,5 @@
 artifacts_root: artifacts
-
+data_file_name: CT-KIDNEY-DATASET-Normal-Cyst-Tumor-Stone
 
 data_ingestion:
   root_dir: artifacts/data_ingestion
@@ -17,3 +17,7 @@ prepare_base_model:
 training:
   root_dir: artifacts/training
   trained_model_path: artifacts/training/model.h5
+  history_path: artifacts/training/history.json
+
+evaluation:
+  root_dir: artifacts/evalutation

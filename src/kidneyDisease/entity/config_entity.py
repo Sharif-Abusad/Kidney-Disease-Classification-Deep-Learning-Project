@@ -25,9 +25,23 @@ class PrepareBaseModelConfig:
 class TrainingConfig:
     root_dir: Path
     trained_model_path: Path
+    history_path: Path
     updated_base_model_path: Path
     training_data: Path
     params_epochs: int
     params_batch_size: int
     params_is_augmentation: bool
     params_image_size: list
+
+
+@dataclass(frozen=True)
+class EvaluationConfig:
+    root_dir: Path
+    history_path: Path
+    path_of_model: Path
+    training_data: Path
+    all_params: dict
+    mlflow_uri: str
+    experiment_name: str
+    params_image_size: list
+    params_batch_size: int

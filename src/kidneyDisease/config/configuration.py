@@ -4,7 +4,8 @@ from kidneyDisease.utils.common import read_yaml, create_directories
 from kidneyDisease.entity.config_entity import (
     DataIngestionConfig,
     PrepareBaseModelConfig,
-    TrainingConfig
+    TrainingConfig,
+    EvaluationConfig
 )
 
 
@@ -60,13 +61,14 @@ class ConfigurationManager:
         training = self.config.training
         prepare_base_model = self.config.prepare_base_model
         params = self.params
-        training_data = os.path.join(self.config.data_ingestion.unzip_dir, "CT-KIDNEY-DATASET-Normal-Cyst-Tumor-Stone")
+        training_data = os.path.join(self.config.data_ingestion.unzip_dir, self.config.data_file_name)
         create_directories([
             Path(training.root_dir)
         ])
         
         training_config = TrainingConfig(
             root_dir=Path(training.root_dir),
+            history_path=Path(training.history_path),
             trained_model_path=Path(training.trained_model_path),
             updated_base_model_path=Path(prepare_base_model.updated_base_model_path),
             training_data=Path(training_data),
@@ -77,3 +79,25 @@ class ConfigurationManager:
         )
 
         return training_config
+    
+
+    def get_evaluation_config(self) -> EvaluationConfig:
+        evaluation = self.config.evaluation
+        training = self.config.training
+        training_data = os.path.join(self.config.data_ingestion.unzip_dir, self.config.data_file_name)
+        create_directories([
+            Path(evaluation.root_dir)
+        ])
+        
+        eval_config = EvaluationConfig(
+            root_dir=Path(evaluation.root_dir),
+            history_path=Path(training.history_path),
+            path_of_model=Path(self.config.training.trained_model_path),
+            training_data=Path(training_data), 
+            mlflow_uri=MLFLOW_URI,
+            experiment_name=MLFLOW_EXPERIMENT_NAME,
+            all_params=self.params,
+            params_image_size=self.params.IMAGE_SIZE,
+            params_batch_size=self.params.BATCH_SIZE
+        )
+        return eval_config

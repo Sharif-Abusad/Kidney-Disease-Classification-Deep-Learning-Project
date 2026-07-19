@@ -2,7 +2,7 @@ from kidneyDisease.config.configuration import ConfigurationManager
 from kidneyDisease.components.prepare_base_model import PrepareBaseModel
 from kidneyDisease import logger
 
-STAGE_NAME = "Prepare base model"
+STAGE_NAME = "Prepare Base Model Stage"
 
 
 class PrepareBaseModelTrainingPipeline:
